@@ -24,35 +24,64 @@ disconnect_from_db <- function(con) {
 ################################################################################
 # Database Query Functions
 ################################################################################
-fetch_15sec_data <- function(number_of_rows) {
+
+# Get data with interval 15 Seconds
+fetch_15sec_data <- function(number_of_rows = 5760) {
+  # Open connection to database
+  con <- connect_to_db()
   q <- str_c("select top ", number_of_rows, " from perFIFTEENSEC") 
-  
+  data <- sqlQuery(con,
+                   q,
+                   stringsAsFactors = FALSE,
+                   as.is = c(T, F))
+  # Close connection to database
+  disconnect_from_db(con)
+  data_DT <- as.POSIXct(data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
+  data[-2] <- data.frame(sapply(data[-2], as.numeric))
+  data$ts <- data_DT
+  data <- data[order(data$ts),]
+  return(data)
 }
 
 
-
-fetch_1min_data <- function(number_of_rows) {
+# Get data with interval 1 Minute
+fetch_1min_data <- function(number_of_rows = 1440) {
+  # Open connection to database
+  con <- connect_to_db()
   q <- str_c("select top ", number_of_rows, " from perMINUTE") 
-  
+  data <- sqlQuery(con,
+                   q,
+                   stringsAsFactors = FALSE,
+                   as.is = c(T, F))
+  # Close connection to database
+  disconnect_from_db(con)
+  data_DT <- as.POSIXct(data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
+  data[-2] <- data.frame(sapply(data[-2], as.numeric))
+  data$ts <- data_DT
+  data <- data[order(data$ts),]
+  return(data)  
 }
 
-
-fetch_1hour_data <- function(number_of_rows) {
+# Get data with interval 1 Hour
+fetch_1hour_data <- function(number_of_rows = 168) {
+  # Open connection to database
+  con <- connect_to_db()
   q <- str_c("select top ", number_of_rows, " from perHOUR") 
-
+  data <- sqlQuery(con,
+                   q,
+                   stringsAsFactors = FALSE,
+                   as.is = c(T, F))
+  # Close connection to database
+  disconnect_from_db(con)
+  data_DT <- as.POSIXct(data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
+  data[-2] <- data.frame(sapply(data[-2], as.numeric))
+  data$ts <- data_DT
+  data <- data[order(data$ts),]
+  return(data) 
 }
 
 
 
 
-con <- connect_to_db()
-data <- sqlQuery(con,
-                          "select top 15840 * from perMINUTE",
-                          stringsAsFactors = FALSE,
-                          as.is = c(T, F))
-odbcCloseAll()
-reactive_data_DT <- as.POSIXct(reactive_data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
-reactive_data[-2] <- data.frame(sapply(reactive_data[-2], as.numeric))
-reactive_data$ts <- reactive_data_DT
-reactive_data <- reactive_data[order(reactive_data$ts),]
-return(reactive_data)
+
+
