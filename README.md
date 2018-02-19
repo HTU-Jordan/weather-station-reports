@@ -1,15 +1,15 @@
 # Weather Station Code Repository
 Everything that has to do with the weather station atop the building.
 
-## /data Folder
+## `~/data` Folder
 You can find associated data in this folder.
 
-## /analyses Folder
+## `~/analyses` Folder
 You can find data analyses in this folder, they are in both `.Rmd` and `.html` formats.  
 To view the `.html` files, check the __Links__ section below.  
 Otherwise you can prepend <http://htmlpreview.github.io/?> to the link of the desired file.
 
-## /code Folder  
+## `~/code` Folder  
 All associated code, from automation scripts to package installation can be found here.  
 
 ## Links
