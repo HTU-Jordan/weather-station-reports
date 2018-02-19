@@ -8,6 +8,8 @@ library(stringr)
 ################################################################################
 # Database Connection Functions
 ################################################################################
+
+# Create Connection to Database
 connect_to_db <- function() {
   con <<- odbcDriverConnect(connection=
                               'dsn=weather-ODBC;
@@ -16,6 +18,7 @@ connect_to_db <- function() {
   return(con)
 }
 
+# Close Connection to Database
 disconnect_from_db <- function(con) {
  close(con) 
 }
