@@ -1,0 +1,1 @@
+rmarkdown::render(input = "code/report_generator.Rmd", output_format = "html_document", output_file = paste0("..//analyses//weather_report_", Sys.Date(), ".html"))

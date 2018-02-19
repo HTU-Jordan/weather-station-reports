@@ -1,0 +1,91 @@
+* {
+    font-family: Calibri;
+    color: black;
+    text-align: justify;
+}
+
+h1 {
+    font-size:32px;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+}
+
+h2 {
+    font-size:24px;
+    font-weight: bold;
+}
+
+p {
+    font-size:16px;
+}
+
+/*#abstract > h2:nth-child(2) {
+    text-align: center;
+}
+
+#abstract > p:nth-child(3) {
+    margin: 0 auto;
+    text-align: justify;
+}*/
+/*h1 h2 p {
+    text-align: justify;
+}*/
+
+
+.author {
+    text-align: center;
+    font-size: 24px;
+    text-transform: uppercase;
+
+}
+
+.author em {
+    font-style: normal;
+    font-weight: bold;
+    color: #337ab7;
+}
+
+#TOC {
+    max-width: 250px;
+    width: 75%;
+    border: none;
+    border-radius: 5px;
+    border-right: 2px solid #337ab7;
+    border-left: 2px solid #337ab7;
+    margin-top: 200px;
+}
+
+.tocify ul, .tocify li {
+    line-height: 24px;
+}
+
+
+hr {
+    border-top: 1px solid rgba(51,122,183,0.3);
+    width: 100%;
+}
+
+#references > ol:nth-child(3) > li {
+    font-size: 16px;
+}
+
+#sub {
+    font-weight: normal;
+    font-size: 24px;
+}
+
+.date {
+	text-align: center;
+}
+
+thead {
+  border: 2px solid #337ab7;
+  border-radius: 10px;
+}
+
+table {
+  border-top: 3px solid #337ab7;
+  border-radius: 10px;
+  border-collapse: inherit;
+}

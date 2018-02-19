@@ -1,0 +1,38 @@
+---
+title: "Weather Report"
+author: "Yanal Kashou - HTU"
+output:
+  html_document:
+    css: '..//stylesheet//styles.css'
+    df_print: default
+    fig_caption: yes
+    highlight: kate
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  word_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = T,
+	fig.height = 8,
+	fig.width = 12,
+	message = FALSE,
+	warning = FALSE
+)
+library(knitr)
+library(magrittr)
+library(kableExtra)
+library(corrplot)
+library(ggplot2)
+library(plotly)
+library(grid)
+library(gridExtra)
+library(scales)
+library(circular)
+library(openair)
+options(knitr.table.format = "html")
+```
