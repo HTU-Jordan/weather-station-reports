@@ -1,4 +1,4 @@
-library(rmarkdown)
+require(rmarkdown)
 f = paste0("C://Users//yanal.kashou//Projects//weather-station-reports//analyses//weather_report_", Sys.Date(), ".html")
 
 if (!file.exists(f)) {
