@@ -1,0 +1,181 @@
+---
+title: "Weather Station Report"
+author: "Yanal Kashou - HTU"
+date: "November 22, 2017"
+output:
+  html_document:
+    css: styles.css
+    df_print: default
+    fig_caption: yes
+    highlight: kate
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  word_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = F,
+	fig.height = 8,
+	fig.width = 12,
+	message = FALSE,
+	warning = FALSE
+)
+library(xlsx)
+library(knitr)
+library(magrittr)
+library(kableExtra)
+library(corrplot)
+library(ggplot2)
+library(plotly)
+library(grid)
+library(gridExtra)
+library(scales)
+library(circular)
+options(knitr.table.format = "html")
+```
+
+***
+
+## The Data
+
+Our weather station at **HTU** produces hourly weather data. The following table shows the last 3 rows of the dataframe, which are the 3 latest observations made by the weather station.
+
+There is some data preparation to be done:  
+
+- The *Date and Time* column must be formatted correctly.   
+- The *Date* and *Time* columns are redundant and instead we will create our own *Date* and  *Time* columns by stripping our formatted *Date and Time* column.  
+- Columns 12, 13 and 14 should be dropped as they simply represent system-specific units and will have no value in our analysis.  
+- The *Record* column is simply an index and will also be dropped.  
+- We will also rename all columns to present them legibly.  
+
+
+```{r read_data}
+classes <- c(Date = "Date")
+df <- read.xlsx2(file = "CR1000_22_11_2017.xlsx", sheetIndex = 1, startRow = 5, colClasses = classes, stringsAsFactors = F)
+df[c(2, 3, 4, 12, 13, 14)] <- NULL
+
+colnames(df) <- c("DT", "Wind.Speed", "Wind.Direction.Degree", "Wind.Direction. std", "Solar.Rad", "Air.Temp", "Relative.Humidity", "Rain.Fall", "Visibility", "Bar.Pressure")
+
+df$DT <- as.POSIXct(df$DT, format="%d/%m/%Y %H:%M:%S", tz="EET")
+df[-1] <- data.frame(sapply(df[-1], as.numeric))
+```
+
+
+
+```{r}
+df1 <- df[c(1:5)]
+df2 <- df[c(6:10)]
+
+kable(tail(df1, 3), "html") %>%
+   kable_styling("striped", full_width = T)
+
+kable(tail(df2, 3), "html") %>%
+    kable_styling("striped", full_width = T)
+
+```
+
+***
+
+## Discovering Correlations
+
+### Correlations Between Features
+First of all, we are going to plot a correlation heatmap between selected features. Namely, *Wind Speed*, *Wind Direction*, *Solar Radiation*, *Air Temp*, *Relative Humidity*, *Rain Fall* and *Visibility*.
+
+This is done to discover correlations between the features that the station collected.
+
+```{r correlation_features}
+df_cor <- df[,-1]
+df_cor <- df_cor[, -9]
+df_cor <- df_cor[,-c(2, 3)]
+# colnames(df_cor) <- c("Wind Speed", "Wind Direction", "Solar Radiation", "Air Temp.", "Relative Humidity", "Rain Fall", "Visibility")
+df_cor <- data.frame(sapply(df_cor, as.numeric))
+M <- cor(df_cor)
+corrplot(M, method = "number")
+```
+
+There are some correlations in our data, specifically we can see that *Air Temperature* has the highest positive correlation with *Solar Radiation*, we also see that *Relative Humidity* has the highest negative correlation with *Air Temperature*, which is logical to deduce.
+
+### Correlations with Time
+
+In the previous section, we discovered some direct correlations between features, however, there is no indication of high correlations of any variable with *Visibility*. We would need to take a deeper exploratory look into the data, specifically in the time-domain, to see if there are indeed any hidden or indirect correlations.
+
+Below we plot the Time and two variables, `Solar.Rad` and the logarithm of `Visibility`. We will also introduce regression lines for each. Noteably, using the logarithmic scale with a regression smoother that captures only 25% (red) of the data shows us a general trend in decrease in `Visibility`. And this corresponds with the local decrease in `Solar.Rad`at the end of the time period.
+
+```{r corr_time_a}
+a <- ggplot(df, aes(DT, Solar.Rad)) +
+  geom_line() + 
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d/%m %I:%M %p")) +
+  stat_smooth(span = 0.075, color = "orange") +
+  xlab("Time") +
+  ylab("Solar Radiation") +
+  ggtitle("Plot of Solar Radiation in (kW/m^2) with Time (h) ") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+# p1 <- ggplotly(a)
+```
+
+```{r plot corr_time_b}
+b <- ggplot(df, aes(DT, log(Visibility))) +
+  geom_line() + 
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d/%m %I:%M %p")) +
+  stat_smooth(span = 0.075) +
+  stat_smooth(span = 0.75, colour = "red") +
+  xlab("Time") +
+  ylab("log(Visibility)") +
+  ggtitle("Plot of Logarithmic Visibility in (M) with Time (h) ") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+# p2 <- ggplotly(b)
+
+# subplot(p1, p2, nrows = 2, margin = 0.04)
+grid.arrange(a, b, nrow=2)
+```
+
+***
+
+## Sustained Wind Speeds
+As above with the temporal plots, we can use the logarithm of the `Wind.Speed` plotted against `Time`, along with different regression lines with 25% (blue), 50% (purple), and 75% (black) of the data to capture a trend.
+
+```{r sustained_wind}
+c <- ggplot(df, aes(DT, log(Wind.Speed))) +
+  geom_point(colour = "black") + 
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d/%m %I:%M %p")) +
+  stat_smooth(span = 0.25, color = "blue") +
+  stat_smooth(span = 0.50, color = "purple") +
+  stat_smooth(span = 0.75, color = "black", size = 1.5) +
+  xlab("Time") +
+  ylab("Speed in KM/H") +
+  ggtitle("Plot of Sustained Wind Speed over Time ") + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+c
+```
+
+We can clearly see a general rise in Wind Speed over the period examined. And logarithmically speaking, it is an order of magnitude greater than the beginning of the period.
+
+***
+
+## General Wind Direction
+
+```{r polar}
+wind.density <- density(as.circular(df$Wind.Direction.Degree,
+                                    control.circular = list(units = "degrees")), 
+                        bw = 30)
+wind.density.df <- as.data.frame(wind.density[c("x", "y")])
+
+ggplot(wind.density.df, aes(x, y)) +
+  geom_area() +
+  scale_x_continuous(breaks = c(0, 90, 180, 180 + 90), 
+                     labels = c("North", "East", "South", "West")) +
+  coord_polar() +
+  theme_bw() + 
+  ggtitle("General Wind Direction")
+```
+
+We can deduce from this awkward looking plot that most of the wind either blew from the north or from the south-west, while some of the wind can be attributed to the north-west.
+
+
