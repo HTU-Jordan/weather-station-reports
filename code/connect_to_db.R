@@ -24,11 +24,25 @@ disconnect_from_db <- function(con) {
 ################################################################################
 # Database Query Functions
 ################################################################################
-fetch_15sec <- function(number_of_rows) {
+fetch_15sec_data <- function(number_of_rows) {
   q <- str_c("select top ", number_of_rows, " from perFIFTEENSEC") 
   
+}
+
+
+
+fetch_1min_data <- function(number_of_rows) {
+  q <- str_c("select top ", number_of_rows, " from perMINUTE") 
   
 }
+
+
+fetch_1hour_data <- function(number_of_rows) {
+  q <- str_c("select top ", number_of_rows, " from perHOUR") 
+
+}
+
+
 
 
 con <- connect_to_db()
