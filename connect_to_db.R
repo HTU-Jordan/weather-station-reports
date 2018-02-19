@@ -1,6 +1,13 @@
+################################################################################
+# Import Libraries
+################################################################################
 library(RODBC)
 library(stringr)
 
+
+################################################################################
+# Database Connection Functions
+################################################################################
 connect_to_db <- function() {
   con <<- odbcDriverConnect(connection=
                               'dsn=weather-ODBC;
@@ -13,6 +20,10 @@ disconnect_from_db <- function(con) {
  close(con) 
 }
 
+
+################################################################################
+# Database Query Functions
+################################################################################
 fetch_15sec <- function(number_of_rows) {
   q <- str_c("select top ", number_of_rows, " from perFIFTEENSEC") 
   
