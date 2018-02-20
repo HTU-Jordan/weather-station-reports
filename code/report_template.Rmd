@@ -44,13 +44,14 @@ f3 = "C:\\Campbellsci\\LoggerNet\\CR1000_OneHour.dat"
 
 ## Abstract
 This is an automatically generated weather report. Today is `r Sys.Date()`.
+It contains automated analysis and aggregated machine learning results such as Temperature forecasts...
 
 ## Data
 
 ### Sources
 The data are sourced from the Campbell Scientific Weather Station, which has the datalogger CR1000.
 
-All data are stored on Microsoft SQL databases, and are of three intervals:  
+While the output of the data is a comma-separated .dat file, all data are also stored on a Microsoft SQL database, which consists of three tables of intervals:  
 
 - 15 seconds, 
 - 1 minute,

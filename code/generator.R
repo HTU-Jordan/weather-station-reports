@@ -5,3 +5,4 @@ if (!file.exists(f)) {
   rmarkdown::render(input = "code/report_template.Rmd", output_format = "html_document", output_file = f)
 }
 
+# Create logic for reproducible vs non-reproducible reports
