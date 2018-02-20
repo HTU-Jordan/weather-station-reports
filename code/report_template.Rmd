@@ -38,6 +38,24 @@ options(knitr.table.format = "html")
 ```
 
 ## Abstract
-This is an automatically generated weather report.
+This is an automatically generated weather report. Today is `r Sys.Date()`.
+
+## Data Sources
+The data are sourced from the Campbell Scientific Weather Station, which has the datalogger CR1000.
+
+All data are stored on Microsoft SQL databases, and are of three intervals:  
+
+- 15 seconds, 
+- 1 minute,
+- 1 hour
 
 ## Temperature
+
+### Hourly
+
+### Weekly
+
+### 3-Day Forecast
+
+
+
