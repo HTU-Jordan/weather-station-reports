@@ -35,12 +35,19 @@ library(scales)
 library(circular)
 library(openair)
 options(knitr.table.format = "html")
+
+f1 = "C:\\Campbellsci\\LoggerNet\\CR1000_FifteenSec.dat"
+f2 = "C:\\Campbellsci\\LoggerNet\\CR1000_OneMin.dat"
+f3 = "C:\\Campbellsci\\LoggerNet\\CR1000_OneHour.dat"
+
 ```
 
 ## Abstract
 This is an automatically generated weather report. Today is `r Sys.Date()`.
 
-## Data Sources
+## Data
+
+### Sources
 The data are sourced from the Campbell Scientific Weather Station, which has the datalogger CR1000.
 
 All data are stored on Microsoft SQL databases, and are of three intervals:  
@@ -49,13 +56,26 @@ All data are stored on Microsoft SQL databases, and are of three intervals:
 - 1 minute,
 - 1 hour
 
-## Temperature
+### Storage Details
 
-### Hourly
+```{r}
+s1 = file.info(f1)$size
+s2 = file.info(f2)$size
+s3 = file.info(f3)$size
+
+```
+
+
+## Temperature {.tabset}
+
+### Hourly 
 
 ### Weekly
 
 ### 3-Day Forecast
 
+## Wind
+
+## Visibility
 
 
