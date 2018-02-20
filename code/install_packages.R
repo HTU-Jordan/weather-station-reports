@@ -11,6 +11,7 @@ packages = c("rmarkdown",
              "corrplot",
              "caret",
              "kableExtra",
-             "stringr")
+             "stringr",
+             "formattable")
 
 install.packages(packages)
