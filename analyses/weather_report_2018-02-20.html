@@ -270,9 +270,21 @@ div.tocify {
 </div>
 <div id="storage-details" class="section level3">
 <h3>Storage Details</h3>
+<p>The table below displays various aspects of the data. The size of each file output is calculated as of today.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s1 =<span class="st"> </span><span class="kw">file.info</span>(f1)<span class="op">$</span>size
 s2 =<span class="st"> </span><span class="kw">file.info</span>(f2)<span class="op">$</span>size
-s3 =<span class="st"> </span><span class="kw">file.info</span>(f3)<span class="op">$</span>size</code></pre></div>
+s3 =<span class="st"> </span><span class="kw">file.info</span>(f3)<span class="op">$</span>size
+
+f =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Fifteen Seconds&quot;</span>, <span class="st">&quot;One Minute&quot;</span>, <span class="st">&quot;One Hour&quot;</span>)
+s =<span class="st"> </span><span class="kw">c</span>(s1<span class="op">/</span><span class="dv">1024</span>, s2<span class="op">/</span><span class="dv">1024</span>, s3<span class="op">/</span><span class="dv">1024</span>)
+
+df =<span class="st"> </span><span class="kw">data.frame</span>(f, s)
+<span class="kw">colnames</span>(df) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Data Source&quot;</span>, <span class="st">&quot;Size in Kilobytes&quot;</span>)
+<span class="kw">print</span>(df)</code></pre></div>
+<pre><code>##       Data Source Size in Kilobytes
+## 1 Fifteen Seconds       12095.76660
+## 2      One Minute        3317.03516
+## 3        One Hour          59.08301</code></pre>
 </div>
 </div>
 <div id="temperature" class="section level2 tabset">

@@ -34,6 +34,7 @@ library(gridExtra)
 library(scales)
 library(circular)
 library(openair)
+library(formattable)
 options(knitr.table.format = "html")
 
 f1 = "C:\\Campbellsci\\LoggerNet\\CR1000_FifteenSec.dat"
@@ -59,10 +60,21 @@ While the output of the data is a comma-separated .dat file, all data are also s
 
 ### Storage Details
 
+The table below displays various aspects of the data. The size of each file output is calculated as of today.
+
 ```{r}
 s1 = file.info(f1)$size
 s2 = file.info(f2)$size
 s3 = file.info(f3)$size
+
+f = c("Fifteen Seconds", "One Minute", "One Hour")
+s = c(s1/1024, s2/1024, s3/1024)
+
+df = data.frame(f, s)
+colnames(df) = c("Data Source", "Size in Kilobytes")
+
+
+kable(df)
 
 ```
 
