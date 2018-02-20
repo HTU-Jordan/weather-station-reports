@@ -1,9 +1,9 @@
 ---
 title: "Weather Report"
-author: "Yanal Kashou - HTU"
+author: "Al Hussein Technical University (HTU)"
 output:
   html_document:
-    css: '..//stylesheet//styles.css'
+    css: ..//stylesheet//styles.css
     df_print: default
     fig_caption: yes
     highlight: kate
@@ -36,3 +36,8 @@ library(circular)
 library(openair)
 options(knitr.table.format = "html")
 ```
+
+## Abstract
+This is an automatically generated weather report.
+
+## Temperature
