@@ -4,7 +4,7 @@ author: "Al Hussein Technical University (HTU)"
 output:
   html_document:
     css: ..//stylesheet//styles.css
-    df_print: default
+    df_print: kable
     fig_caption: yes
     highlight: kate
     toc: yes
@@ -16,6 +16,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+# Set global options
 knitr::opts_chunk$set(
 	echo = T,
 	fig.height = 8,
@@ -23,6 +24,8 @@ knitr::opts_chunk$set(
 	message = FALSE,
 	warning = FALSE
 )
+
+# Load libraries
 library(knitr)
 library(magrittr)
 library(kableExtra)
@@ -35,13 +38,21 @@ library(scales)
 library(circular)
 library(openair)
 library(formattable)
+library(lubridate)
 options(knitr.table.format = "html")
 
+# Load other files and functions
+source("C:\\Users\\yanal.kashou\\Projects\\weather-station-reports\\code\\connect_to_db.R")
+source("C:\\Users\\yanal.kashou\\Projects\\weather-station-reports\\code\\plot_randomizer.R")
+
+# Load data files
 f1 = "C:\\Campbellsci\\LoggerNet\\CR1000_FifteenSec.dat"
 f2 = "C:\\Campbellsci\\LoggerNet\\CR1000_OneMin.dat"
 f3 = "C:\\Campbellsci\\LoggerNet\\CR1000_OneHour.dat"
 
 ```
+
+***
 
 ## Abstract
 This is an automatically generated weather report. Today is `r Sys.Date()`.
@@ -58,23 +69,34 @@ While the output of the data is a comma-separated .dat file, all data are also s
 - 1 minute,
 - 1 hour
 
+The data files are loaded to get basic information and metadata about the files. The data itself that is used is queried from the SQL database.
+
 ### Storage Details
 
 The table below displays various aspects of the data. The size of each file output is calculated as of today.
 
-```{r}
+```{r storage_details, message=FALSE, warning=FALSE}
+# Get size of the files
 s1 = file.info(f1)$size
 s2 = file.info(f2)$size
 s3 = file.info(f3)$size
 
+# Get number of rows while skipping the headers
+l1 = length(count.fields(f1, skip = 4))
+l2 = length(count.fields(f2, skip = 4))
+l3 = length(count.fields(f3, skip = 4))
+
+# Concatenate into a data frame
 f = c("Fifteen Seconds", "One Minute", "One Hour")
 s = c(s1/1024, s2/1024, s3/1024)
+l = c(l1, l2, l3)
 
-df = data.frame(f, s)
-colnames(df) = c("Data Source", "Size in Kilobytes")
+df = data.frame(f, s, l)
+colnames(df) = c("Data Source", "Size in Kilobytes", "# of Data Points")
 
-
-kable(df)
+# Display table
+kable(df) %>%
+    kable_styling("striped", full_width = T)
 
 ```
 
@@ -84,11 +106,21 @@ kable(df)
 ### Hourly 
 
 ### Weekly
-
+```{r temp}
+number_of_rows = 10080
+data <- fetch_1min_data(number_of_rows)
+temperature_plot(data)
+```
 ### 3-Day Forecast
 
 ## Wind
 
 ## Visibility
 
+## Correlation between Features
 
+
+
+
+
+***
